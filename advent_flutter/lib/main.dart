@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String hand = '';
+  String hand1 = ''; String hand2 = ''; String hand3 ='';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     TextField(
                       onChanged: (text){
-                        hand = text;
+                        hand1 = text;
+                      },
+                    ),
+                    TextField(
+                      onChanged: (text){
+                        hand2 = text;
+                      },
+                    ),
+                    TextField(
+                      onChanged: (text){
+                        hand3 = text;
                       },
                     ),
                   ],
@@ -54,7 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
               actions: [
                 TextButton(
                 onPressed: () {
-                  print(Sorting2(hand));
+
+                  print(hand1 + hand2 + hand3);
+                  print(Round2([hand1, hand2, hand3]));
                 }, child: Text('Sort'),
 
               ),]
@@ -70,8 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Text('Lets play'),
             TextButton(
                 onPressed: (){
-                  List<String> HandList = DataConversion().keys.toList();
-                  print(Round1(HandList).toString());
+                  print('data conversion: ${DataConversion().toString()}');
+                  print(EntireProcessTest().toString());
+                  print('Total: ${EntireProcess()}');
                 }, child: Text('Go')),
           ],
         )

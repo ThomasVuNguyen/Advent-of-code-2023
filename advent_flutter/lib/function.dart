@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -53,7 +54,6 @@ String Sorting2(String hand){
 
     }
     DuplicatesList.add(CardDuplicate);
-    print('added');
     CardDuplicate = 0;
   }
   if (DuplicatesList.contains(5)){
@@ -286,3 +286,66 @@ Map<String, int> Round1Count(List<String> HandList) {
   };
 }
 
+List<String> Round2(List<String> HandList){
+  List<int> HandListNumerical = [];
+  List< String > HandListSorted = [];
+  Map<int, String> handToNumber = {};
+  //convert string to numerical value & put in a map
+  for (var hand in HandList){
+    num number = Rank2[hand[0]]!*pow(10,4) + Rank2[hand[1]]!*pow(10,3) + Rank2[hand[2]]!*pow(10,2) + Rank2[hand[3]]!*pow(10,1) + Rank2[hand[4]]!;
+    handToNumber[number.toInt()] = hand;
+    HandListNumerical.add(number.toInt());
+  }
+  //sort numerical
+  HandListNumerical.sort();
+  for (var i = HandListNumerical.length-1; i>-1; i--){
+    HandListSorted.add(handToNumber[HandListNumerical[i]]!);
+  }
+  return HandListSorted;
+  //result: list of hands from high to low
+
+
+}
+
+List<String> RoundCombined(Map<String, List<String>> Round1Done){
+  List<String> FinalList = Round2(Round1Done['ListRank7']!) + Round2(Round1Done['ListRank6']!) +
+      Round2(Round1Done['ListRank5']!) + Round2(Round1Done['ListRank4']!) + Round2(Round1Done['ListRank3']!) +
+      Round2(Round1Done['ListRank2']!) + Round2(Round1Done['ListRank1']!);
+  return FinalList;
+}
+
+
+int TotalMoney(List<String> RoundCombined, Map<String, int> HandandBid){
+  int total = 0;
+  for (var i = 0; i<RoundCombined.length; i++){
+    String hand = RoundCombined[i];
+    int? money = HandandBid[hand];
+    int rank = RoundCombined.length - i;
+    total = total + money!*rank;
+  }
+  return total;
+}
+
+List<List<String>> TotalMoneyTest(List<String> RoundCombined, Map<String, int> HandandBid){
+  List<List<String>> ComprehensiveList = [];
+  for (var i = 0; i<RoundCombined.length; i++){
+    String hand = RoundCombined[i];
+    int? money = HandandBid[hand];
+    int rank = RoundCombined.length - i;
+    List<String> handInfo = [hand, rank.toString(), money.toString()];
+    ComprehensiveList.add(handInfo);
+  }
+  return ComprehensiveList;
+}
+
+int EntireProcess (){
+  List<String> HandList = DataConversion().keys.toList();
+  Map<String, List<String>> Round1Result = Round1(HandList);
+  return TotalMoney(RoundCombined(Round1Result), DataConversion());
+}
+
+List<List<String>> EntireProcessTest (){
+  List<String> HandList = DataConversion().keys.toList();
+  Map<String, List<String>> Round1Result = Round1(HandList);
+  return TotalMoneyTest(RoundCombined(Round1Result), DataConversion());
+}
